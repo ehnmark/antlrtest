@@ -1,0 +1,22 @@
+grammar SbeText;
+/*
+    * Parser Rules
+    */
+message  : pair ('|' pair) * ;
+pair  : key '=' value ;
+key: KEY;
+value : NUM_VALUE | STRING_VALUE | submessage;
+submessage : KEY '(' message ')';
+
+/*
+    * Lexer Rules
+    */
+
+fragment LOWERCASE  : [a-z] ;
+fragment UPPERCASE  : [A-Z] ;
+fragment DIGIT : [0-9] ;
+
+KEY : (LOWERCASE | UPPERCASE) (LOWERCASE | UPPERCASE | DIGIT)+ ;
+NUM_VALUE         : DIGIT+ ([.,] DIGIT+)? ;
+STRING_VALUE  : '\'' (LOWERCASE | UPPERCASE)+ '\'';
+WHITESPACE : ' ' -> skip ;

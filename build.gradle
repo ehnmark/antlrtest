@@ -1,0 +1,33 @@
+apply plugin: 'antlr'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  antlr "org.antlr:antlr4:4.7.2"
+  compile "org.antlr:antlr4-runtime:4.7.2"
+  testCompile 'junit:junit:4.12'
+}
+
+generateGrammarSource {
+    maxHeapSize = "64m"
+    // Doesn't work with test rig:
+    //arguments += ['-package', 'com.github.ehnmark.SbeTextParser']
+}
+
+compileJava.dependsOn generateGrammarSource
+
+task Boo {
+  doLast {
+    println(sourceSets.main.compileClasspath)
+  }
+}
+
+task grun(type: JavaExec) {
+  dependsOn compileJava
+  classpath = sourceSets.main.runtimeClasspath
+  main = "org.antlr.v4.gui.TestRig"
+  workingDir "${rootDir}/src/main/antlr"
+  args "SbeText", "message", "${rootDir}/etc/testinput.txt", "-tokens"
+}
