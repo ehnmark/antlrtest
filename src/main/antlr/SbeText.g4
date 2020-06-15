@@ -3,10 +3,10 @@
 grammar SbeText;
 
 message
-   : key body
+   : messageType body
    ;
 
-key
+messageType
    : '[' PRIMITIVE ']'
    ;
 
@@ -15,14 +15,25 @@ body
    ;
 
 pair
-   : PRIMITIVE '=' value
+   : key '=' value
+   ;
+
+key
+   : PRIMITIVE
    ;
 
 value
-   : PRIMITIVE body
+   : composite
    | PRIMITIVE
    ;
 
+composite
+   : compositeType body
+   ;
+
+compositeType
+   : PRIMITIVE
+   ;
 
 fragment LOWERCASE  : [a-z] ;
 fragment UPPERCASE  : [A-Z] ;

@@ -13,16 +13,10 @@ dependencies {
 generateGrammarSource {
     maxHeapSize = "64m"
     // Doesn't work with test rig:
-    //arguments += ['-package', 'com.github.ehnmark.SbeTextParser']
+    arguments += ['-package', 'com.github.ehnmark.SbeText']
 }
 
 compileJava.dependsOn generateGrammarSource
-
-task Boo {
-  doLast {
-    println(sourceSets.main.compileClasspath)
-  }
-}
 
 task grun(type: JavaExec) {
   dependsOn compileJava
@@ -30,4 +24,13 @@ task grun(type: JavaExec) {
   main = "org.antlr.v4.gui.TestRig"
   workingDir "${rootDir}/src/main/antlr"
   args "SbeText", "message", "${rootDir}/etc/testinput.txt", "-tokens"
+}
+
+task run(type: JavaExec) {
+  dependsOn compileJava
+  classpath = sourceSets.main.runtimeClasspath
+  main = "com.github.ehnmark.antlrtest.Main"
+  workingDir "${rootDir}/etc"
+  args "${rootDir}/etc/testinput.txt"
+
 }
